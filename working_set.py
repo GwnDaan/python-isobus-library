@@ -27,7 +27,7 @@ class WorkingSet:
         """
         self.ca = ca
         self.state = WorkingSet.State.NONE
-        self.object_pool = ObjectPool()
+        self._object_pool = ObjectPool()
         
     def start(self):
         """Start the working set. The controller application must be started and the object pool set!
@@ -35,12 +35,19 @@ class WorkingSet:
         if self.ca.state != j1939.ControllerApplication.State.NORMAL:
             raise RuntimeError("ControllerApplication must be started before initializing WorkingSet!")
         
-        if not self.object_pool.is_ready():
+        if not self._object_pool.is_ready():
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
         self.ca.subscribe(self._on_message)
         self.ca.add_timer(1, self._tick) # Send the maintenance message every second
         self.state = WorkingSet.State.AWAITING_VT_STATUS
+        
+    def add_object_to_pool(self, object):
+        if self.state >= WorkingSet.State.UPLOADING_POOL:
+            # TODO: implement realtime editing of pool
+            raise NotImplementedError
+        
+        self._object_pool.add_object(object)
     
     def _next_state(self):
         """Set current state to next"""
@@ -119,7 +126,7 @@ class WorkingSet:
         
         # Upload the object pool IFF the state is set
         if self.state == WorkingSet.State.UPLOADING_POOL:
-            body = self.object_pool.get_data()
+            body = self._object_pool.get_data()
             self.send(PGNS.ECU_TO_VT, 7, 
                       # Data follows below:
                       functions.TransferObjectPool.TRANSFER, body)
