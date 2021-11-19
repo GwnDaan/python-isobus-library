@@ -39,13 +39,13 @@ class WorkingSet:
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
         self.ca.subscribe(self._on_message)
-        self.ca.add_timer(1, self._tick) # Send the maintenance message every second
+        self.ca.add_timer(1, self._tick, cookie=self.ca) # Send the maintenance message every second
         self.state = WorkingSet.State.AWAITING_VT_STATUS
         
     def add_object_to_pool(self, object):
         if self.state >= WorkingSet.State.UPLOADING_POOL:
             # TODO: implement realtime editing of pool
-            raise NotImplementedError
+            raise NotImplementedError()
         
         self._object_pool.add_object(object)
     
@@ -63,6 +63,7 @@ class WorkingSet:
             # The format per message is different. However, the function format is common:
             # - byte 0: function
             function = data[0]
+            print("Received from VT: ", function)
             if function == functions.Status.VT_STATUS:
                 if self.state == WorkingSet.State.AWAITING_VT_STATUS:
                     self._next_state()
@@ -103,6 +104,8 @@ class WorkingSet:
     def _tick(self, _):
         """Check if we need to perform any actions"""
         
+        print("state", self.state)
+
         # Announce the current working set as master if state is set
         if self.state == WorkingSet.State.ANNOUNCING_WORKING_MASTER:
             self.send(PGNS.WORKING_SET_MASTER, 7,
@@ -111,7 +114,7 @@ class WorkingSet:
             self._next_state()
         
         # Send the maintenance message IFF the state is the init maintenance state or above
-        if self.state >= WorkingSet.State.INIT_MAINTENANCE:
+        elif self.state >= WorkingSet.State.INIT_MAINTENANCE:
             initializing = self.state == WorkingSet.State.INIT_MAINTENANCE
             self.send(PGNS.ECU_TO_VT, 7, 
                     # Data follows below:
@@ -120,22 +123,27 @@ class WorkingSet:
             # Get hardware and set to next state if we are currently initializing.
             if initializing:
                 self._next_state()
+                print("Sending hardware request")
                 self.send(PGNS.ECU_TO_VT, 7, 
                         # Data follows below:
                         functions.TechinalData.GET_HARDWARE)
         
-        # Upload the object pool IFF the state is set
-        if self.state == WorkingSet.State.UPLOADING_POOL:
-            body = self._object_pool.get_data()
-            self.send(PGNS.ECU_TO_VT, 7, 
-                      # Data follows below:
-                      functions.TransferObjectPool.TRANSFER, body)
+        # # Upload the object pool IFF the state is set
+        # if self.state == WorkingSet.State.UPLOADING_POOL:
+        #     print("Getting pool data")
+        #     body = self._object_pool.get_data()
+        #     print("Got data... sending")
+        #     self.send(PGNS.ECU_TO_VT, 7, 
+        #               # Data follows below:
+        #               functions.TransferObjectPool.TRANSFER, body)
+        #     print("Data sent!")
             
-            # Successfully uploaded the complete pool, tell the vt it is the end
-            self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
-            self._next_state()
-            
+        #     # Successfully uploaded the complete pool, tell the vt it is the end
+        #     self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
+        #     self._next_state()
         
+        return True
+                    
     def send(self, pgn, priority, *args, length=8, completer=0xFF):
         """Completes and sends the args as pgn.
         
@@ -148,7 +156,11 @@ class WorkingSet:
         :param int completer:
             The value which will be appended to the data to get the length.
         """
-        data = bytes(args) + bytes((completer for _ in range(length - len(args))))
+        data = bytes(0)
+        for element in args:
+            data += element if isinstance(element, bytes) else bytes([element])
+
+        data += bytes((completer for _ in range(length - len(data))))
         assert len(data) == length
         
         # Disasembling the pgn

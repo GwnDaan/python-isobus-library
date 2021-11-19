@@ -29,7 +29,7 @@ class GraphicsObject(DataObject):
         if len(encoded_picture_data) < len(raw_picture_data):
             self.options = 4
         
-        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), raw_picture_data, self.macros],
+        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
                                # The following are the byte_length of each data value
                                2, 1, 2, 2, 2, 1, 1, 1, 4, 1, len(picture_data), 2)
         
@@ -44,7 +44,7 @@ class GraphicsObject(DataObject):
         image = Image.open(self.image_path)
         image.load()
         
-        # image.thumbnail((400, 300,), Image.ANTIALIAS)
+        # image.thumbnail((100, 75,), Image.ANTIALIAS)
         
         image = image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
         
