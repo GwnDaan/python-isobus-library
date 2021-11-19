@@ -18,14 +18,23 @@ class WorkingSetObject(DataObject):
     
     # Overrides from DataObject
     def get_data(self):
-        # TODO: make objects, macros, languages own dataclass
         return object_to_bytes([self.object_id, self._TYPE, self.background_color, self.selectable, self.active_mask_object_id, len(self.objects), len(self.macros), len(self.languages), self.objects, self.macros, self.languages],
                                # The following are the byte_length of each data value
                                2, 1, 1, 1, 2, 1, 1, 1, 6, 2, 2)
     
-        
+
+@dataclass
 class DataMaskObject(DataObject):
-    _TYPE = 1
+    _TYPE = 1 # Byte 3
     
-    def __init__(self, object_id):
-        self.object_id = object_id
+    object_id: int # Byte 1-2
+    background_color: int # Byte 4
+    soft_key_mask: int # Byte 5-6
+    objects: list = field(default_factory=list) # Number of objects = byte 7, repeated with starting byte 9
+    macros: list = field(default_factory=list) # Number of macros = byte 8, repeated after 'objects'
+    
+    # Overrides from DataObject
+    def get_data(self):
+        return object_to_bytes([self.object_id, self._TYPE, self.background_color, self.soft_key_mask, len(self.objects), len(self.macros), self.objects, self.macros],
+                               # The following are the byte_length of each data value
+                               2, 1, 1, 2, 1, 1, 6, 2)
