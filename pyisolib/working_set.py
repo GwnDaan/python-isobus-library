@@ -75,8 +75,8 @@ class WorkingSet:
                 # We completed hardware state, next is memory
                 self._next_state()
                 self.send(PGNS.ECU_TO_VT, 7, 
-                        # Data follows below: TODO: remove static memory of 100000 and calculate it
-                        functions.TechinalData.GET_MEMORY, 0xFF, (100000).to_bytes(4, 'little'))
+                        # Data follows below: TODO: remove static memory of 200000 and calculate it
+                        functions.TechinalData.GET_MEMORY, 0xFF, (200000).to_bytes(4, 'little'))
             
             elif function == functions.TechinalData.GET_MEMORY:
                 assert self.state == WorkingSet.State.AWAIT_MEMORY
