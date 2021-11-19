@@ -51,6 +51,11 @@ def object_to_bytes(data: list, *byte_length) -> bytes:
             # We generate new byte_lengths for each element in the list            
             result += object_to_bytes(value, *(length for _ in range(len(value))))
         
+        elif isinstance(value, bytes):
+            if (length != len(value)):
+                raise RuntimeError(f"We got type bytes but byte_length is not equal to length of bytes ({len(value)})", length)
+            result += value
+        
         elif isinstance(value, DataObject):
             # Make sure that we have the int byte_length type
             if not isinstance(length, int):
