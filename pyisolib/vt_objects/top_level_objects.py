@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 
-from vt_objects.abstract_object import DataObject
-from vt_objects.listed_items import ListedObject
-from vt_objects.object_utils import object_to_bytes
+from .abstract_object import DataObject
+from .listed_items import ListedObject
+from .object_utils import object_to_bytes
 
 @dataclass
 class WorkingSetObject(DataObject):

@@ -1,6 +1,6 @@
 import j1939
 
-import functions
+from . import functions
 from .pgns import PGNS
 from .vt_objects.object_pool import ObjectPool
 

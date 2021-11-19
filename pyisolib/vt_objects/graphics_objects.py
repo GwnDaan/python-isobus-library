@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field
 
-from PIL.ImageFile import ImageFile
-from vt_objects.abstract_object import DataObject
-from vt_objects.object_utils import object_to_bytes
+from .abstract_object import DataObject
+from .object_utils import object_to_bytes
 
 from PIL import Image
 

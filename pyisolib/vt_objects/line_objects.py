@@ -1,4 +1,10 @@
-@dataclass
+import dataclasses
+
+from .object_utils import SignedInt, object_to_bytes
+from .abstract_object import DataObject
+
+
+@dataclasses
 class ListedObject(DataObject):
     object_id: int
     x_location: int

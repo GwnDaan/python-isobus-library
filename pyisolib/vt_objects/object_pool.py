@@ -1,5 +1,5 @@
-from vt_objects.abstract_object import DataObject
-from vt_objects.top_level_objects import DataMaskObject, WorkingSetObject
+from .abstract_object import DataObject
+from .top_level_objects import DataMaskObject, WorkingSetObject
 
 class ObjectPool:
     

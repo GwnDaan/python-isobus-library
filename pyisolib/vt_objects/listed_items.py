@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
-from vt_objects.abstract_object import DataObject
-from vt_objects.object_utils import SignedInt, object_to_bytes
+from .abstract_object import DataObject
+from .object_utils import SignedInt, object_to_bytes
 
 @dataclass
 class ListedObject(DataObject):
