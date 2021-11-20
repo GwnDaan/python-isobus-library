@@ -1,3 +1,4 @@
+import math
 import j1939
 
 from . import functions
@@ -178,6 +179,10 @@ class WorkingSet:
         pdu_specific = pgn & 0xFF
         
         # Send the actual pgn
-        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
-        if not success:
-            raise RuntimeError("Sending pgn failed!")
+        amount_of_tsp = math.ceil(len(data) / 8 / 100)
+        for i in range(amount_of_tsp):
+            partial_data = data[i * 8 * 100:(i + 1) * 8 * 100]
+            print(f"{i} sending", len(partial_data))
+            success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(partial_data))
+            if not success:
+                raise RuntimeError("Sending pgn failed!")
