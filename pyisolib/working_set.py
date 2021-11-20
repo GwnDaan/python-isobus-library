@@ -179,9 +179,9 @@ class WorkingSet:
         pdu_specific = pgn & 0xFF
         
         # Send the actual pgn
-        amount_of_tsp = math.ceil(len(data) / 8 / 255)
+        amount_of_tsp = math.ceil(len(data) / 8 / 254)
         for i in range(amount_of_tsp):
-            partial_data = data[i * 8 * 255:(i + 1) * 8 * 255]
+            partial_data = data[i * 8 * 254:(i + 1) * 8 * 254]
             print(f"{i} sending", len(partial_data))
             success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(partial_data))
             if not success:
