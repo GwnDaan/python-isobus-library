@@ -172,6 +172,11 @@ class WorkingSet:
         if len(data) % 8 != length % 8:
             raise RuntimeError(f"Data with length '{len(data)}' we need to send is not equal to requested length.", length)
         
+        for i in range(len(data)):
+            value = data[i]
+            if value > 255:
+                print("TO BIG!", i, value)
+
         # Disasembling the pgn
         data_page = (pgn >> 16) & 0x01
         pdu_format = (pgn >> 8) & 0xFF
