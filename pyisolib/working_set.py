@@ -167,11 +167,11 @@ class WorkingSet:
         for element in args:
             data += element if isinstance(element, bytes) else bytes([element])
 
-        data += bytes((completer for _ in range(length - len(data) % 8)))
+        data += bytes((completer for _ in range(length - len(data))))
         
-        # Assert that length is equal
-        if len(data) % 8 != length % 8:
-            raise RuntimeError(f"Data with length '{len(data)}' we need to send is not equal to requested length.", length)
+        # Assert that length is equal TODO: better completer for TP or ETP sessions
+        # if len(data) % 8 != length % 8:
+            # raise RuntimeError(f"Data with length '{len(data)}' we need to send is not equal to requested length.", length)
 
         # Disasembling the pgn
         data_page = (pgn >> 16) & 0x01
