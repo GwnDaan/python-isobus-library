@@ -1,4 +1,5 @@
 import math
+import time
 import j1939
 
 from . import functions
@@ -140,12 +141,15 @@ class WorkingSet:
                       functions.TransferObjectPool.TRANSFER, body)
             print("Data sent!")
             print("---------------")
-            
+
             # Successfully uploaded the complete pool, tell the vt it is the end
-            self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
+            self.ca.add_timer(3, self.send_end_of_pool)
             self._next_state()
         
         return True
+    
+    def send_end_of_pool(self, _):
+        self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
                     
     def send(self, pgn, priority, *args, length=8, completer=0xFF):
         """Completes and sends the args as pgn.
