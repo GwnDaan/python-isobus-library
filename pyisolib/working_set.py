@@ -130,6 +130,7 @@ class WorkingSet:
         
         # # Upload the object pool IFF the state is set
         if self.state == WorkingSet.State.UPLOADING_POOL:
+            print("---------------")
             print("Getting pool data")
             body = self._object_pool.get_data()
             print("Got data... sending")
@@ -137,6 +138,7 @@ class WorkingSet:
                       # Data follows below:
                       functions.TransferObjectPool.TRANSFER, body)
             print("Data sent!")
+            print("---------------")
             
             # Successfully uploaded the complete pool, tell the vt it is the end
             self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
