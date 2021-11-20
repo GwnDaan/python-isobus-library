@@ -183,6 +183,6 @@ class WorkingSet:
         pdu_specific = pgn & 0xFF
         
         # Send the actual pgn
-        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, data)
+        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
         if not success:
             raise RuntimeError("Sending pgn failed!")
