@@ -35,7 +35,7 @@ class GraphicsObject(DataObject):
         
         # Make sure we complete all objects
         if len(data) % 8 != 0:
-            toAdd = 8 - len(data % 8)
+            toAdd = 8 - len(data) % 8
             data += bytes([0 for _ in range(toAdd)])
 
         return data
@@ -55,20 +55,22 @@ class GraphicsObject(DataObject):
         return image.tobytes()
     
 def _run_length_encoding(data):
-  compressed = []
+  compressed = bytearray()
   
   # Current info
   count = 1
   color = data[0]
   
   for i in range(1,len(data)):
-    if data[i] == color:
+    if data[i] == color and count < 255:
       count = count + 1
     else:
-      compressed.append([count, color])
+      compressed.append(count)
+      compressed.append(color)
       color = data[i]
       count = 1
     
   # Append the current info as we didn't do that yet
-  compressed.append([count, color])
-  return compressed
+  compressed.append(count)
+  compressed.append(color)
+  return bytes(compressed)
