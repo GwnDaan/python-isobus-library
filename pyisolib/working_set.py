@@ -158,19 +158,26 @@ class WorkingSet:
         :param int completer:
             The value which will be appended to the data to get the length.
         """
+        # Assert that we can actually send data
+        if self.state <= WorkingSet.State.AWAITING_VT_STATUS:
+            raise RuntimeError("WorkingSet not yet ready to send data", self.state)
+
         data = bytes(0)
         for element in args:
             data += element if isinstance(element, bytes) else bytes([element])
 
-        data += bytes((completer for _ in range(length - len(data))))
-        assert len(data) == length
+        data += bytes((completer for _ in range(length - len(data) % 8)))
         
+        # Assert that length is equal
+        if len(data) % 8 != length % 8:
+            raise RuntimeError(f"Data with length '{len(data)}' we need to send is not equal to requested length.", length)
+
         # Disasembling the pgn
         data_page = (pgn >> 16) & 0x01
         pdu_format = (pgn >> 8) & 0xFF
         pdu_specific = pgn & 0xFF
         
         # Send the actual pgn
-        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, data)
+        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
         if not success:
             raise RuntimeError("Sending pgn failed!")
