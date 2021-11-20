@@ -129,17 +129,17 @@ class WorkingSet:
                         functions.TechinalData.GET_HARDWARE)
         
         # # Upload the object pool IFF the state is set
-        if self.state == WorkingSet.State.UPLOADING_POOL:
-            body = self._object_pool.get_data()
-            print("Got object data pool... sending")
-            self.send(PGNS.ECU_TO_VT, 7, 
-                      # Data follows below:
-                      functions.TransferObjectPool.TRANSFER, body)
-            print("Data sent!")
+        # if self.state == WorkingSet.State.UPLOADING_POOL:
+        #     body = self._object_pool.get_data()
+        #     print("Got object data pool... sending")
+        #     self.send(PGNS.ECU_TO_VT, 7, 
+        #               # Data follows below:
+        #               functions.TransferObjectPool.TRANSFER, body)
+        #     print("Data sent!")
             
-            # Successfully uploaded the complete pool, tell the vt it is the end
-            self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
-            self._next_state()
+        #     # Successfully uploaded the complete pool, tell the vt it is the end
+        #     self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
+        #     self._next_state()
         
         return True
                     
