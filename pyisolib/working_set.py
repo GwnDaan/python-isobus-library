@@ -185,7 +185,7 @@ class WorkingSet:
         # Send the actual pgn, if length is 1786 we use ETP otherwise we use j1939 python module to send it
         if len(data) >= 1786:
             print("ETP send: ", len(data))
-            etp = ExtendedTP(self.ca, priority, pdu_specific)
+            etp = ExtendedTP(self.ca, priority)
             etp.send(data_page, pdu_format, pdu_specific, data)
         else:
             print("Normal send: ", len(data))
