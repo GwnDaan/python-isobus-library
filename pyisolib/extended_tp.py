@@ -137,7 +137,7 @@ class ExtendedTP:
 
         if control_byte == ExtendedTP.ControlByte.CTS:
             num_packages = data[1]
-            next_package_number = int.from_bytes(data[2:6]) - 1
+            next_package_number = int.from_bytes(data[2:6], 'little') - 1
             if num_packages == 0:
                 # SAE J1939/21
                 # receiver requests a pause
