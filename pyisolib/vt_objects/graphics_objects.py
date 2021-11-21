@@ -23,17 +23,17 @@ class GraphicsObject(DataObject):
         encoded_picture_data = _run_length_encoding(raw_picture_data)
         
         # useEncoded = len(encoded_picture_data) < len(raw_picture_data)
-        # useEncoded = False
-        # picture_data = encoded_picture_data if useEncoded else raw_picture_data
+        useEncoded = False
+        picture_data = encoded_picture_data if useEncoded else raw_picture_data
 
-        picture_data = bytes([10, 20, 30, 40, 50])
+        # picture_data = bytes([10, 20, 30, 40, 50])
 
         # TODO: better way of allowing options to be set
         # if len(encoded_picture_data) < len(raw_picture_data):
             # self.options = 4
         self.options = 0
         
-        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, 5, 1, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
+        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
                                # The following are the byte_length of each data value
                                2, 1, 2, 2, 2, 1, 1, 1, 4, 1, len(picture_data), 2)
         
