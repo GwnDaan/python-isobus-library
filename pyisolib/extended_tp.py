@@ -153,7 +153,7 @@ class ExtendedTP:
                 print("CTS: Allowed more packets %d than needed to complete transmission %d", num_packages, self.total_num_packets - next_package_number)
                 num_packages = self.total_num_packets - next_package_number
 
-            self.next_wait_on_cts = self.next_packet_to_send + num_packages - 1
+            self.next_wait_on_cts = self.next_packet_to_send + num_packages
             print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
 
             self.__send_dpo(num_packages, next_package_number)
