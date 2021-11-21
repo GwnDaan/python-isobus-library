@@ -144,7 +144,7 @@ class WorkingSet:
             print("---------------")
 
             # Successfully uploaded the complete pool, tell the vt it is the end
-            self.ca.add_timer(3, self.send_end_of_pool)
+            self.ca.add_timer(5, self.send_end_of_pool)
             self.__next_state()
         
         return True

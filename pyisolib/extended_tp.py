@@ -79,11 +79,11 @@ class ExtendedTP:
 
         self.ca.add_timer(0, self.async_job)
         
-    def async_job(self, now):
-        next_wakeup = now + 5.0 # wakeup in 5 seconds
+    def async_job(self, _):
+        next_wakeup = time.time() + 5.0 # wakeup in 5 seconds
 
         if self.deadline != 0:
-            if self.deadline > now:
+            if self.deadline > time.time():
                 if next_wakeup > self.deadline:
                     next_wakeup = self.deadline
             else:
