@@ -110,6 +110,7 @@ class ExtendedTP:
                         # set end of message status
                         if self.next_packet_to_send == self.next_wait_on_cts:
                             # wait on next cts
+                            print(f"Send complete, current index {self.next_packet_to_send - 1}")
                             self.state = ExtendedTP.State.WAITING_CTS
                             self.deadline = time.time() + self.Timeout.T3
                             break
@@ -129,8 +130,6 @@ class ExtendedTP:
         # if pgn != ParameterGroupNumber(0, 200, self.ca.device_address).value:
         if pgn != 51200:
             return
-
-        print("Received CM message")
         
         control_byte = data[0]
         # pgn = data[5] | (data[6] << 8) | (data[7] << 16)
@@ -154,7 +153,7 @@ class ExtendedTP:
                 num_packages = self.total_num_packets - next_package_number
 
             self.next_wait_on_cts = self.next_packet_to_send + num_packages - 1
-            print(f"CTS: allowed {num_packages} more")
+            print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
 
             self.state = ExtendedTP.State.SENDING_IN_CTS
             self.deadline = time.time()

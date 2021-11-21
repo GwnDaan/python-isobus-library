@@ -62,13 +62,11 @@ class WorkingSet:
     def __on_message(self, priority, pgn, sa, timestamp, data):
         """Used to receive message from the VT.
         """
-        if pgn == 51200:
-            print("received cm!!!!")
         if pgn == PGNS.VT_TO_ECU:
             # The format per message is different. However, the function format is common:
             # - byte 0: function
             function = data[0]
-            print("Received from VT: ", function)
+            # print("Received from VT: ", function)
             if function == functions.Status.VT_STATUS:
                 if self.__state == WorkingSet.State.AWAITING_VT_STATUS:
                     self.__next_state()
@@ -109,7 +107,7 @@ class WorkingSet:
     def __tick(self, _):
         """Check if we need to perform any actions"""
         
-        print("state", self.__state)
+        # print("state", self.__state)
 
         # Announce the current working set as master if state is set
         if self.__state == WorkingSet.State.ANNOUNCING_WORKING_MASTER:
