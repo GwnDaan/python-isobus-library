@@ -74,7 +74,8 @@ class ExtendedTP:
         self.next_packet_to_send = 0
         self.next_wait_on_cts = 0
         self.data = bytearray(data)
-        
+
+        self.ca.subscribe(self.listen_cm)        
         self.__send_rts(message_size)
 
         self.ca.add_timer(0, self.async_job)
