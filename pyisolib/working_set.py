@@ -42,8 +42,12 @@ class WorkingSet:
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
         self.ca.subscribe(self.__on_message)
+        self.ca.subscribe_acknowledge(self.listen_ack)
         self.ca.add_timer(1, self.__tick, cookie=self.ca) # Send the maintenance message every second
         self.__state = WorkingSet.State.AWAITING_VT_STATUS
+    
+    def listen_ack():
+        print("acked")
         
     def add_object_to_pool(self, object):
         if self.__state >= WorkingSet.State.UPLOADING_POOL:
