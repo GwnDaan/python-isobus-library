@@ -126,7 +126,7 @@ class ExtendedTP:
     def listen_cm(self, priority, pgn, src_address, timestamp, data):
         """Processes aa Extended Transport Protocol Connection Management (ETP.CM) message
         """
-        if pgn != ParameterGroupNumber(0, 200, self.ca.device_address):
+        if pgn != ParameterGroupNumber(0, 200, self.ca.device_address).value:
             return
         
         control_byte = data[0]
