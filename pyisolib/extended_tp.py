@@ -102,15 +102,16 @@ class ExtendedTP:
                         else:
                             while len(data)<7:
                                 data.append(255)
-                        data.insert(0, self.next_packet_to_send + 1)
-                        self.__send_tp_dt(data)
-
+                        
                         self.next_packet_to_send += 1
+                        data.insert(0, self.next_packet_to_send)
+                        self.__send_dt(data)
+
 
                         # set end of message status
                         if self.next_packet_to_send == self.next_wait_on_cts:
                             # wait on next cts
-                            print(f"Send complete, current index {self.next_packet_to_send - 1}")
+                            print(f"Send complete, current index {self.next_packet_to_send}")
                             self.state = ExtendedTP.State.WAITING_CTS
                             self.deadline = time.time() + self.Timeout.T3
                             break
@@ -136,7 +137,7 @@ class ExtendedTP:
 
         if control_byte == ExtendedTP.ControlByte.CTS:
             num_packages = data[1]
-            next_package_number = data[2] - 1
+            next_package_number = int.from_bytes(data[2:6]) - 1
             if num_packages == 0:
                 # SAE J1939/21
                 # receiver requests a pause
@@ -155,6 +156,7 @@ class ExtendedTP:
             self.next_wait_on_cts = self.next_packet_to_send + num_packages - 1
             print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
 
+            self.__send_dpo(num_packages, next_package_number)
             self.state = ExtendedTP.State.SENDING_IN_CTS
             self.deadline = time.time()
             self.ca.add_timer(0, self.async_job)
@@ -170,7 +172,7 @@ class ExtendedTP:
         else:
             raise RuntimeError(f"Received TP.CM with unknown control_byte {control_byte}")
     
-    def __send_tp_dt(self, data):
+    def __send_dt(self, data):
         pgn = ParameterGroupNumber(0, 199, self.dest_address)
         self.ca.send_message(self.priority, pgn.value, data)
     
@@ -179,6 +181,11 @@ class ExtendedTP:
         data = [ExtendedTP.ControlByte.RTS, message_size & 0xFF, (message_size >> 8) & 0xFF, (message_size >> 16) & 0xFF, (message_size >> 24) & 0xFF, self.pgn_target & 0xFF, (self.pgn_target >> 8) & 0xFF, (self.pgn_target >> 16) & 0xFF]
         self.ca.send_message(self.priority, pgn.value, data)
         
+    def __send_dpo(self, num_packets, data_offset):
+        pgn = ParameterGroupNumber(0, 200, self.dest_address)
+        data = [ExtendedTP.ControlByte.DPO, num_packets, data_offset & 0xFF, (data_offset >> 8) & 0xFF, (data_offset >> 16) & 0xFF, self.pgn_target & 0xFF, (self.pgn_target >> 8) & 0xFF, (self.pgn_target >> 16) & 0xFF]
+        self.ca.send_message(self.priority, pgn.value, data)
+
     def __send_abort(self, reason):
         pgn = ParameterGroupNumber(0, 200, self.dest_address)
         data = [ExtendedTP.ControlByte.ABORT, reason, 0xFF, 0xFF, 0xFF, self.pgn_target & 0xFF, (self.pgn_target >> 8) & 0xFF, (self.pgn_target >> 16) & 0xFF]
