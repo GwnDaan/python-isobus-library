@@ -66,6 +66,8 @@ class WorkingSet:
     def __on_message(self, priority, pgn, sa, timestamp, data):
         """Used to receive message from the VT.
         """
+        if pgn == 51328:
+            print("received cm!!!!")
         if pgn == PGNS.VT_TO_ECU:
             # The format per message is different. However, the function format is common:
             # - byte 0: function
