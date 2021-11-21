@@ -41,7 +41,10 @@ class GraphicsObject(DataObject):
         image = Image.open(self.image_path)
         image.load()
                 
-        image = image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=216)
+        # print(image.getpixel((1,1)))
+        image = image.convert('RGB')
+        # .convert('P', palette=Image.ADAPTIVE, colors=216)
+        # print(image.getpixel((1,1)))
         
         self.picture_width = image.width
         self.picture_height = image.height
@@ -49,8 +52,16 @@ class GraphicsObject(DataObject):
         data = bytearray()
         for y in range(self.picture_height):
           for x in range(self.picture_width):
-            data.append(15 + 216 - image.getpixel((x, y)))
+            r, g, b = image.getpixel((x, y))
+
+            data.append(16 + _get_websafe(r, g, b))
         return data
+
+tbl = tuple((int(i) + 25) // 51 for i in range(256))
+
+def _get_websafe(*color):
+  r, g, b = (tbl[c] for c in color)
+  return r * 36 + g * 6 + b
     
 def _run_length_encoding(data):
   compressed = bytearray()
