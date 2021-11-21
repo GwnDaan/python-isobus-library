@@ -127,7 +127,7 @@ class ExtendedTP:
         """Processes aa Extended Transport Protocol Connection Management (ETP.CM) message
         """
         # if pgn != ParameterGroupNumber(0, 200, self.ca.device_address).value:
-        if pgn != 51328:
+        if pgn != 51200:
             return
 
         print("Received CM message")

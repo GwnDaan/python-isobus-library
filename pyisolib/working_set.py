@@ -42,12 +42,8 @@ class WorkingSet:
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
         self.ca.subscribe(self.__on_message)
-        self.ca.subscribe_acknowledge(self.listen_ack)
         self.ca.add_timer(1, self.__tick, cookie=self.ca) # Send the maintenance message every second
         self.__state = WorkingSet.State.AWAITING_VT_STATUS
-    
-    def listen_ack():
-        print("acked")
         
     def add_object_to_pool(self, object):
         if self.__state >= WorkingSet.State.UPLOADING_POOL:
@@ -66,7 +62,7 @@ class WorkingSet:
     def __on_message(self, priority, pgn, sa, timestamp, data):
         """Used to receive message from the VT.
         """
-        if pgn == 51328:
+        if pgn == 51200:
             print("received cm!!!!")
         if pgn == PGNS.VT_TO_ECU:
             # The format per message is different. However, the function format is common:
