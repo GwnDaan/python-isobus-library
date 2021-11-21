@@ -132,7 +132,7 @@ class WorkingSet:
                         functions.TechinalData.GET_HARDWARE)
         
         # # Upload the object pool IFF the state is set
-        if self.state == WorkingSet.State.UPLOADING_POOL:
+        if self.__state == WorkingSet.State.UPLOADING_POOL:
             print("---------------")
             print("Getting pool data")
             body = self.__object_pool.get_data()
@@ -145,7 +145,7 @@ class WorkingSet:
 
             # Successfully uploaded the complete pool, tell the vt it is the end
             self.ca.add_timer(3, self.send_end_of_pool)
-            self._next_state()
+            self.__next_state()
         
         return True
     
@@ -165,8 +165,8 @@ class WorkingSet:
             The value which will be appended to the data to get the length.
         """
         # Assert that we can actually send data
-        if self.state <= WorkingSet.State.AWAITING_VT_STATUS:
-            raise RuntimeError("WorkingSet not yet ready to send data", self.state)
+        if self.__state <= WorkingSet.State.AWAITING_VT_STATUS:
+            raise RuntimeError("WorkingSet not yet ready to send data", self.__state)
 
         data = bytes(0)
         for element in args:
@@ -176,19 +176,19 @@ class WorkingSet:
        # The transport protocol and extended transport protocol will handle it themselves
         if len(data) < 8:
             data += bytes((completer for _ in range(length - len(data))))
-
-        data += bytes((completer for _ in range(length - len(data))))
         
-        # Assert that length is equal TODO: better completer for TP or ETP sessions
-        # if len(data) % 8 != length % 8:
-            # raise RuntimeError(f"Data with length '{len(data)}' we need to send is not equal to requested length.", length)
-
         # Disasembling the pgn
         data_page = (pgn >> 16) & 0x01
         pdu_format = (pgn >> 8) & 0xFF
         pdu_specific = pgn & 0xFF
         
-        # Send the actual pgn
-        success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
-        if not success:
-            raise RuntimeError("Sending pgn failed!")
+        # Send the actual pgn, if length is 1786 we use ETP otherwise we use j1939 python module to send it
+        if len(data) >= 1786:
+            print("ETP send: ", len(data))
+            etp = ExtendedTP(self.ca, priority, pdu_specific)
+            etp.send(data_page, pdu_format, pdu_specific, data)
+        else:
+            print("Normal send: ", len(data))
+            success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
+            if not success:
+                raise RuntimeError("Sending pgn failed!")
