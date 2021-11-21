@@ -26,8 +26,6 @@ class GraphicsObject(DataObject):
         useEncoded = False
         picture_data = encoded_picture_data if useEncoded else raw_picture_data
 
-        # picture_data = bytes([10, 20, 30, 40, 50])
-
         # TODO: better way of allowing options to be set
         # if len(encoded_picture_data) < len(raw_picture_data):
             # self.options = 4
@@ -36,28 +34,23 @@ class GraphicsObject(DataObject):
         data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
                                # The following are the byte_length of each data value
                                2, 1, 2, 2, 2, 1, 1, 1, 4, 1, len(picture_data), 2)
-        
-        # Make sure we complete all objects
-        # if len(data) % 8 != 0:
-        #     toAdd = 8 - len(data) % 8
-        #     data += bytes([0 for _ in range(toAdd)])
 
         return data
     
     def _get_raw_image_data(self) -> bytes:
         image = Image.open(self.image_path)
         image.load()
-        
-        # image.thumbnail((10, 1,), Image.ANTIALIAS)
-        
-        image = image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
+                
+        image = image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=216)
         
         self.picture_width = image.width
         self.picture_height = image.height
-        
-        image.save("assets/pixel.png")
-        # print(len(image.tobytes()))
-        return image.tobytes()
+
+        data = bytearray()
+        for y in range(self.picture_height):
+          for x in range(self.picture_width):
+            data.append(16 + 216 - image.getpixel((x, y)))
+        return data
     
 def _run_length_encoding(data):
   compressed = bytearray()
