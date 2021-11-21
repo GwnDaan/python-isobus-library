@@ -104,8 +104,8 @@ class ExtendedTP:
                                 data.append(255)
                         
                         self.next_packet_to_send += 1
-                        self.sequence_number += 1
                         data.insert(0, self.sequence_number)
+                        self.sequence_number += 1
                         self.__send_dt(data)
 
 
