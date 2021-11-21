@@ -128,6 +128,8 @@ class ExtendedTP:
         """
         if pgn != ParameterGroupNumber(0, 200, self.ca.device_address).value:
             return
+
+        print("Received CM message")
         
         control_byte = data[0]
         # pgn = data[5] | (data[6] << 8) | (data[7] << 16)
