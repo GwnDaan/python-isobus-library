@@ -137,6 +137,7 @@ class ExtendedTP:
             if num_packages == 0:
                 # SAE J1939/21
                 # receiver requests a pause
+                print("CTS: requested timeout")
                 self.deadline = time.time() + self.Timeout.Th
                 self.ca.add_timer(0, self.async_job)
                 return
@@ -149,6 +150,7 @@ class ExtendedTP:
                 num_packages = self.total_num_packets - next_package_number
 
             self.next_wait_on_cts = self.next_packet_to_send + num_packages - 1
+            print(f"CTS: allowed {num_packages} more")
 
             self.state = ExtendedTP.State.SENDING_IN_CTS
             self.deadline = time.time()
@@ -157,7 +159,7 @@ class ExtendedTP:
         elif control_byte == ExtendedTP.ControlByte.EOMA:
             self.state = ExtendedTP.State.COMPLETED
             self.ca.add_timer(0, self.async_job)
-            
+            print("Job completed!")
         elif control_byte == ExtendedTP.ControlByte.ABORT:
             reason = data[1]
             print(f"CTS ABORTED: reason {reason}")
