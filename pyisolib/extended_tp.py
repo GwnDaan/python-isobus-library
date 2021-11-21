@@ -104,7 +104,8 @@ class ExtendedTP:
                                 data.append(255)
                         
                         self.next_packet_to_send += 1
-                        data.insert(0, self.next_packet_to_send)
+                        self.sequence_number += 1
+                        data.insert(0, self.sequence_number)
                         self.__send_dt(data)
 
 
@@ -154,6 +155,7 @@ class ExtendedTP:
                 num_packages = self.total_num_packets - next_package_number
 
             self.next_wait_on_cts = self.next_packet_to_send + num_packages
+            self.sequence_number = 1
             print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
 
             self.__send_dpo(num_packages, next_package_number)
