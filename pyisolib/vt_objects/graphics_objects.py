@@ -48,7 +48,7 @@ class GraphicsObject(DataObject):
         image = Image.open(self.image_path)
         image.load()
         
-        image.thumbnail((10, 1,), Image.ANTIALIAS)
+        # image.thumbnail((10, 1,), Image.ANTIALIAS)
         
         image = image.convert('RGB').convert('P', palette=Image.ADAPTIVE, colors=255)
         
