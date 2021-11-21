@@ -49,7 +49,7 @@ class GraphicsObject(DataObject):
         data = bytearray()
         for y in range(self.picture_height):
           for x in range(self.picture_width):
-            data.append(16 + 216 - image.getpixel((x, y)))
+            data.append(15 + 216 - image.getpixel((x, y)))
         return data
     
 def _run_length_encoding(data):
