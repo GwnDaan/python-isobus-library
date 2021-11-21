@@ -22,9 +22,10 @@ class GraphicsObject(DataObject):
         raw_picture_data = self._get_raw_image_data()
         encoded_picture_data = _run_length_encoding(raw_picture_data)
         
-        useEncoded = len(encoded_picture_data) < len(raw_picture_data)
+        # useEncoded = len(encoded_picture_data) < len(raw_picture_data)
+        useEncoded = False
         picture_data = encoded_picture_data if useEncoded else raw_picture_data
-        
+
         # TODO: better way of allowing options to be set
         if len(encoded_picture_data) < len(raw_picture_data):
             self.options = 4
