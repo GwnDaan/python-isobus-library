@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from numpy.lib.arraysetops import isin
+
 from .abstract_object import DataObject
 
 def object_to_bytes(data: list, *byte_length) -> bytes:
@@ -51,7 +53,7 @@ def object_to_bytes(data: list, *byte_length) -> bytes:
             # We generate new byte_lengths for each element in the list            
             result += object_to_bytes(value, *(length for _ in range(len(value))))
         
-        elif isinstance(value, bytes):
+        elif isinstance(value, bytes) or isinstance(value, bytearray):
             if (length != len(value)):
                 raise RuntimeError(f"We got type bytes but byte_length is not equal to length of bytes ({len(value)})", length)
             result += value
