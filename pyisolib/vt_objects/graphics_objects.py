@@ -32,11 +32,11 @@ class GraphicsObject(DataObject):
         self.options = 0
         
         # TODO: this is testing
-        picture_data = bytearray()
-        for i in range(216):
-          picture_data.append(16 + i)
+        # picture_data = bytearray()
+        # for i in range(216):
+          # picture_data.append(16 + i)
         
-        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, 27, 8, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
+        data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
                                # The following are the byte_length of each data value
                                2, 1, 2, 2, 2, 1, 1, 1, 4, 1, len(picture_data), 2)
 
