@@ -138,9 +138,10 @@ class ExtendedTP:
 
         if control_byte == ExtendedTP.ControlByte.CTS:
             if self.state == ExtendedTP.State.SENDING_IN_CTS:
-                print("Received CTS message but still sending, waiting...")
-                self.ca.add_timer(ExtendedTP.Timeout.Th) # Delay CTS
-                return
+                print("Received CTS message but still sending, delaying...")
+                # self.ca.add_timer(ExtendedTP.Timeout.Th, TODO FIX) # Delay CTS
+                time.sleep(ExtendedTP.Timeout.Th) # Delay CTS
+                assert(self.state == ExtendedTP.State.WAITING_CTS)
 
             num_packages = data[1]
             next_package_number = int.from_bytes(data[2:6], 'little') - 1
