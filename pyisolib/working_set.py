@@ -147,7 +147,7 @@ class WorkingSet:
         return True
     
     def send_end_of_pool(self, etp):
-        if etp is ExtendedTP:
+        if isinstance(etp, ExtendedTP):
             if etp.state != ExtendedTP.State.COMPLETED:
                 return True # Request to run this again in the future
         print("Sending end of pool message")
