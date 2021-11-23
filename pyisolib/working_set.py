@@ -1,9 +1,8 @@
-import math
-import time
 import j1939
-from pyisolib.extended_tp import ExtendedTP
 
 from . import functions
+from .extended_tp import ExtendedTP
+from .technical_data import TechnicalData
 from .pgns import PGNS
 from .vt_objects.object_pool import ObjectPool
 
@@ -19,9 +18,10 @@ class WorkingSet:
         INIT_MAINTENANCE = 4
         AWAIT_HARDWARE = 5
         AWAIT_MEMORY = 6
-        UPLOADING_POOL = 7
-        AWAITING_POOL_COMPLETE = 8
-        NORMAL = 9
+        AWAIT_SOFT_KEYS = 7
+        UPLOADING_POOL = 8
+        AWAITING_POOL_COMPLETE = 9
+        NORMAL = 10
         
     def __init__(self, ca: j1939.ControllerApplication):
         """
@@ -31,6 +31,7 @@ class WorkingSet:
         self.ca = ca
         self.__state = WorkingSet.State.NONE
         self.__object_pool = ObjectPool()
+        self.technical_data = TechnicalData()
         
     def start(self):
         """Start the working set. The controller application must be started and the object pool set!
@@ -38,10 +39,10 @@ class WorkingSet:
         if self.ca.state != j1939.ControllerApplication.State.NORMAL:
             raise RuntimeError("ControllerApplication must be started before initializing WorkingSet!")
         
+        self.__object_pool.cache_data()
         if not self.__object_pool.is_ready():
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
-        self.data = self.__object_pool.get_data() # Cache object pool data
         self.ca.subscribe(self.__on_message)
         self.ca.add_timer(1, self.__tick, cookie=self.ca) # Send the maintenance message every second
         self.__state = WorkingSet.State.AWAITING_VT_STATUS
@@ -67,15 +68,14 @@ class WorkingSet:
             # The format per message is different. However, the function format is common:
             # - byte 0: function
             function = data[0]
-            # print("Received from VT: ", function)
             if function == functions.Status.VT_STATUS:
                 if self.__state == WorkingSet.State.AWAITING_VT_STATUS:
                     self.__next_state()
                     
             elif function == functions.TechinalData.GET_HARDWARE:
                 assert self.__state == WorkingSet.State.AWAIT_HARDWARE
-                self.x_pixels = int.from_bytes(data[4:6], 'little')
-                self.y_pixels = int.from_bytes(data[6:8], 'little')
+                self.technical_data.screen_width = int.from_bytes(data[4:6], 'little')
+                self.technical_data.screen_height = int.from_bytes(data[6:8], 'little')
                 
                 # We completed hardware state, next is memory
                 self.__next_state()
@@ -85,15 +85,25 @@ class WorkingSet:
             
             elif function == functions.TechinalData.GET_MEMORY:
                 assert self.__state == WorkingSet.State.AWAIT_MEMORY
-                self.vt_version = data[1]
+                self.technical_data.vt_version = data[1]
                 memory_error = data[2]
                 
                 # We check if the vt has enough memory. TODO reduce the requested memory size otherwise
                 if memory_error == 1:
                     raise RuntimeError("Not enough memory available to hold our object pool!")
                 else:
+                    # We completed memory state, next is soft keys
                     self.__next_state()
-            
+                    self.send(PGNS.ECU_TO_VT, 7, functions.TechinalData.GET_SOFT_KEYS)            
+                    
+            elif function == functions.TechinalData.GET_SOFT_KEYS:
+                assert self.__state == WorkingSet.State.AWAIT_SOFT_KEYS
+                self.technical_data.soft_key_width = data[4]
+                self.technical_data.soft_key_height = data[5]
+                self.technical_data.soft_key_virtual_amount = data[6]
+                self.technical_data.soft_key_physical_amount = data[7]
+                
+                self.__next_state()
             elif function == functions.TransferObjectPool.END_OF_POOL:
                 error_code = data[1]
                 if error_code != 0:
@@ -108,8 +118,6 @@ class WorkingSet:
     def __tick(self, _):
         """Check if we need to perform any actions"""
         
-        # print("state", self.__state)
-
         # Announce the current working set as master if state is set
         if self.__state == WorkingSet.State.ANNOUNCING_WORKING_MASTER:
             self.send(PGNS.WORKING_SET_MASTER, 7,
@@ -135,10 +143,9 @@ class WorkingSet:
         # # Upload the object pool IFF the state is set
         if self.__state == WorkingSet.State.UPLOADING_POOL:
             print("Uploading pool data")
-            body = self.data
             etp = self.send(PGNS.ECU_TO_VT, 7, 
                       # Data follows below:
-                      functions.TransferObjectPool.TRANSFER, body)
+                      functions.TransferObjectPool.TRANSFER, self.__object_pool.cached_data)
 
             # Successfully uploaded the complete pool, tell the vt it is the end
             self.ca.add_timer(3, self.send_end_of_pool, etp)
