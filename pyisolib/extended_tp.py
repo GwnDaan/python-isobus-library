@@ -138,7 +138,8 @@ class ExtendedTP:
 
         if control_byte == ExtendedTP.ControlByte.CTS:
             if self.state == ExtendedTP.State.SENDING_IN_CTS:
-                print("Received CTS message but still sending, skipping...")
+                print("Received CTS message but still sending, waiting...")
+                self.ca.add_timer(ExtendedTP.Timeout.Th) # Delay CTS
                 return
 
             num_packages = data[1]
