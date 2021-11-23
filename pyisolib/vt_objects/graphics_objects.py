@@ -11,9 +11,9 @@ class GraphicsObject(DataObject):
     
     object_id: int # Byte 1-2
     new_width: int # Byte 4-5
-    format: int # Byte 10
+    format: int # Byte 10 # TODO: implement format
     # options: int # Byte 11
-    transparency_color: int # Byte 12
+    transparency_color: int # Byte 12 # TODO: implement in options
     image_path: str
     macros :list = field(default_factory=list) # Number of macros = byte 14, repeated after 'objects'
     
