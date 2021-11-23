@@ -137,6 +137,10 @@ class ExtendedTP:
         # pgn = data[5] | (data[6] << 8) | (data[7] << 16)
 
         if control_byte == ExtendedTP.ControlByte.CTS:
+            if self.state == ExtendedTP.State.SENDING_IN_CTS:
+                print("Received CTS message but still sending, skipping...")
+                return
+
             num_packages = data[1]
             next_package_number = int.from_bytes(data[2:6], 'little') - 1
             if num_packages == 0:
