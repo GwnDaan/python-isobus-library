@@ -41,6 +41,7 @@ class WorkingSet:
         if not self.__object_pool.is_ready():
             raise RuntimeError("The object pool is not yet ready, make sure you added objects!")
         
+        self.data = self.__object_pool.get_data() # Cache object pool data
         self.ca.subscribe(self.__on_message)
         self.ca.add_timer(1, self.__tick, cookie=self.ca) # Send the maintenance message every second
         self.__state = WorkingSet.State.AWAITING_VT_STATUS
@@ -135,7 +136,7 @@ class WorkingSet:
         if self.__state == WorkingSet.State.UPLOADING_POOL:
             print("---------------")
             print("Getting pool data")
-            body = self.__object_pool.get_data()
+            body = self.data
             print("Got data... sending")
             self.send(PGNS.ECU_TO_VT, 7, 
                       # Data follows below:
