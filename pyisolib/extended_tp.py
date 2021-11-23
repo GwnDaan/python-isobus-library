@@ -112,8 +112,8 @@ class ExtendedTP:
                         # set end of message status
                         if self.next_packet_to_send == self.next_wait_on_cts:
                             # wait on next cts
-                            print(f"Send complete, current index {self.next_packet_to_send}")
                             self.state = ExtendedTP.State.WAITING_CTS
+                            print(f"Send complete, current index {self.next_packet_to_send}")
                             self.deadline = time.time() + self.Timeout.T3
                             break
                         # elif self.minimum_tp_rts_cts_dt_interval != None:
