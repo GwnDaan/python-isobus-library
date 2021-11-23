@@ -134,23 +134,23 @@ class WorkingSet:
         
         # # Upload the object pool IFF the state is set
         if self.__state == WorkingSet.State.UPLOADING_POOL:
-            print("---------------")
-            print("Getting pool data")
+            print("Uploading pool data")
             body = self.data
-            print("Got data... sending")
-            self.send(PGNS.ECU_TO_VT, 7, 
+            etp = self.send(PGNS.ECU_TO_VT, 7, 
                       # Data follows below:
                       functions.TransferObjectPool.TRANSFER, body)
-            print("Data sent!")
-            print("---------------")
 
             # Successfully uploaded the complete pool, tell the vt it is the end
-            self.ca.add_timer(10, self.send_end_of_pool)
+            self.ca.add_timer(3, self.send_end_of_pool, etp)
             self.__next_state()
         
         return True
     
-    def send_end_of_pool(self, _):
+    def send_end_of_pool(self, etp):
+        if etp is ExtendedTP:
+            if etp.state != ExtendedTP.State.COMPLETED:
+                return True # Request to run this again in the future
+        print("Sending end of pool message")
         self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
                     
     def send(self, pgn, priority, *args, length=8, completer=0xFF):
@@ -187,6 +187,7 @@ class WorkingSet:
         if len(data) >= 1786:
             etp = ExtendedTP(self.ca, priority)
             etp.send(data_page, pdu_format, pdu_specific, data)
+            return etp
         else:
             success = self.ca.send_pgn(data_page, pdu_format, pdu_specific, priority, bytearray(data))
             if not success:
