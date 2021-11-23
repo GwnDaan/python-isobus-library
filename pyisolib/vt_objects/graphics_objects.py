@@ -22,19 +22,14 @@ class GraphicsObject(DataObject):
         raw_picture_data = self._get_raw_image_data()
         encoded_picture_data = _run_length_encoding(raw_picture_data)
         
-        # useEncoded = len(encoded_picture_data) < len(raw_picture_data)
-        useEncoded = False
+        useEncoded = len(encoded_picture_data) < len(raw_picture_data)
         picture_data = encoded_picture_data if useEncoded else raw_picture_data
 
         # TODO: better way of allowing options to be set
-        # if len(encoded_picture_data) < len(raw_picture_data):
-            # self.options = 4
-        self.options = 0
-        
-        # TODO: this is testing
-        # picture_data = bytearray()
-        # for i in range(216):
-          # picture_data.append(16 + i)
+        if len(encoded_picture_data) < len(raw_picture_data):
+          self.options = 4
+        else:
+          self.options = 0
         
         data = object_to_bytes([self.object_id, self._TYPE, self.new_width, self.picture_width, self.picture_height, self.format, self.options, self.transparency_color, len(picture_data), len(self.macros), picture_data, self.macros],
                                # The following are the byte_length of each data value
@@ -46,10 +41,7 @@ class GraphicsObject(DataObject):
         image = Image.open(self.image_path)
         image.load()
                 
-        # print(image.getpixel((1,1)))
         image = image.convert('RGB')
-        # .convert('P', palette=Image.ADAPTIVE, colors=216)
-        # print(image.getpixel((1,1)))
         
         self.picture_width = image.width
         self.picture_height = image.height
