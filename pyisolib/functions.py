@@ -1,7 +1,7 @@
 class TechinalData:
     GET_MEMORY = 192
     GET_HARDWARE = 199
-    GET_SOFT_KEYS = 193
+    GET_SOFT_KEYS = 194
     
 class TransferObjectPool:
     TRANSFER = 17
