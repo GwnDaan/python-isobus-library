@@ -3,4 +3,9 @@ from .working_set import WorkingSet
 from .vt_objects.graphics_objects import GraphicsObject
 from .vt_objects.listed_items import *
 from .vt_objects.top_level_objects import *
-from .vt_objects.line_objects import *
+from .vt_objects.shape_objects import *
+from .vt_objects.attribute_objects import *
+from .vt_objects.input_field_objects import *
+from .vt_objects.output_field_objects import *
+from .vt_objects.soft_key_objects import *
+from .vt_objects.variable_objects import *
