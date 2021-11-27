@@ -141,7 +141,7 @@ class WorkingSet:
             # Get hardware and set to next state if we are currently initializing.
             if initializing:
                 self.__next_state()
-                print("Sending hardware request")
+                print("Requesting hardware info")
                 self.send(PGNS.ECU_TO_VT, 7, 
                         # Data follows below:
                         functions.TechinalData.GET_HARDWARE)

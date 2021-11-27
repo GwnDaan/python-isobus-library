@@ -19,7 +19,7 @@ class FontAttributes(DataObject):
     def get_data(self):
         return object_to_bytes([self.object_id, self._TYPE, self.font_color, self.font_size, self.font_type, self.font_style, len(self.macros), self.macros],
                                # The following are the byte_length of each data value
-                               2, 1, 1, 1, 1, 1, 1, 1, 1)
+                               2, 1, 1, 1, 1, 1, 1, 2)
 
 @dataclass
 class LineAttribute(DataObject):
