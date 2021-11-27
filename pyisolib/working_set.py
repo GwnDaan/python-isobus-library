@@ -83,6 +83,7 @@ class WorkingSet:
                 
                 # We completed hardware state, next is memory
                 self.__next_state()
+                print("Requesting memory info")
                 self.send(PGNS.ECU_TO_VT, 7, 
                         # Data follows below: TODO: remove static memory of 200000 and calculate it
                         functions.TechinalData.GET_MEMORY, 0xFF, (200000).to_bytes(4, 'little'))
@@ -98,6 +99,7 @@ class WorkingSet:
                 else:
                     # We completed memory state, next is soft keys
                     self.__next_state()
+                    print("Requesting softkey info")
                     self.send(PGNS.ECU_TO_VT, 7, functions.TechinalData.GET_SOFT_KEYS)            
                     
             elif function == functions.TechinalData.GET_SOFT_KEYS:
