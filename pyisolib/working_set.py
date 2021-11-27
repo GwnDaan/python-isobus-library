@@ -32,6 +32,10 @@ class WorkingSet:
         self.__state = WorkingSet.State.NONE
         self.__object_pool = ObjectPool()
         self.technical_data = TechnicalData()
+
+    @property
+    def state(self):
+        return self.__state
         
     def start(self):
         """Start the working set. The controller application must be started and the object pool set!
