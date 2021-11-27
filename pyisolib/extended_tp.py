@@ -113,7 +113,6 @@ class ExtendedTP:
                         if self.next_packet_to_send == self.next_wait_on_cts:
                             # wait on next cts
                             self.state = ExtendedTP.State.WAITING_CTS
-                            print(f"Send complete, current index {self.next_packet_to_send}")
                             self.deadline = time.time() + self.Timeout.T3
                             break
                         # elif self.minimum_tp_rts_cts_dt_interval != None:
@@ -138,7 +137,7 @@ class ExtendedTP:
 
         if control_byte == ExtendedTP.ControlByte.CTS:
             if self.state == ExtendedTP.State.SENDING_IN_CTS:
-                print("Received CTS message but still sending, delaying...")
+                # print("Received CTS message but still sending, delaying...")
                 time.sleep(ExtendedTP.Timeout.Th) # Delay CTS
                 assert(self.state == ExtendedTP.State.WAITING_CTS)
 
@@ -161,7 +160,7 @@ class ExtendedTP:
 
             self.next_wait_on_cts = self.next_packet_to_send + num_packages
             self.sequence_number = 1
-            print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
+            # print(f"CTS: allowed {num_packages} more, index {next_package_number}, waitwhen {self.next_wait_on_cts}")
 
             self.__send_dpo(num_packages, next_package_number)
             self.state = ExtendedTP.State.SENDING_IN_CTS
@@ -171,7 +170,6 @@ class ExtendedTP:
         elif control_byte == ExtendedTP.ControlByte.EOMA:
             self.state = ExtendedTP.State.COMPLETED
             self.ca.add_timer(0, self.async_job)
-            print("Job completed!")
         elif control_byte == ExtendedTP.ControlByte.ABORT:
             reason = data[1]
             print(f"CTS ABORTED: reason {reason}")
