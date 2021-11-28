@@ -163,11 +163,11 @@ class WorkingSet:
         
         # # Upload the object pool IFF the state is set
         if self.__state == WorkingSet.State.UPLOADING_POOL:
-            print("Uploading pool data")
             etp = self.send_to_vt(functions.TransferObjectPool.TRANSFER, self.__object_pool.cached_data)
+            print(f"Uploading pool data (using etp: {etp is not None})")
 
             # Successfully uploaded the complete pool, tell the vt it is the end
-            self.ca.add_timer(3, self.send_end_of_pool, etp)
+            self.ca.add_timer(1 if etp else 10, self.send_end_of_pool, etp)
             self.__next_state()
         
         return True
