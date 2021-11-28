@@ -50,4 +50,4 @@ class MacroObject(DataObject):
     def get_data(self):
         return object_to_bytes([self.object_id, self._TYPE, len(self.command), self.command],
                                # The following are the byte_length of each data value
-                               2, 1, 2, len(self.command))
+                               1, 1, 2, len(self.command))
