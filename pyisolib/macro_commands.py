@@ -11,6 +11,8 @@ def __convert_cmd(*args, completer=0xFF) -> bytes:
     if len(data) < 8:
         data += bytes((completer for _ in range(8 - len(data))))
 
+    return data
+
 # ----------------------
 # All the different cmds
 # ----------------------
