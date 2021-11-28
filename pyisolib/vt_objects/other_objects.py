@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from .object_utils import object_to_bytes
+from ..packet_utils import object_to_bytes
 from .abstract_object import DataObject
 
 
@@ -38,3 +38,16 @@ class PointerObject(DataObject):
         return object_to_bytes([self.object_id, self._TYPE, self.value],
                                # The following are the byte_length of each data value
                                2, 1, 2)
+
+@dataclass
+class MacroObject(DataObject):
+    _TYPE = 27 # Byte 3
+    
+    object_id: int # Byte 1-2
+    command: bytes # Byte 4-5
+    
+    # Overrides from DataObject
+    def get_data(self):
+        return object_to_bytes([self.object_id, self._TYPE, len(self.command), self.command],
+                               # The following are the byte_length of each data value
+                               2, 1, 2, len(self.command))

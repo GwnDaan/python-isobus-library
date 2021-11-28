@@ -10,3 +10,6 @@ class TransferObjectPool:
 class Status:
     VT_STATUS = 254
     MAINTENANCE = 255
+
+class Commands:
+    CHANGE_NUMERIC_VALUE = 168
