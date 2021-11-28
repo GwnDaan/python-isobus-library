@@ -138,4 +138,4 @@ def IEEE754(n):
     # convert the binary to hexadecimal
     # hstr = '0x%0*X' %((len(final) + 3) // 4, int(final, 2))
     # return (hstr, final)
-    return int(final, 2).to_bytes(len(final) // 8, byteorder='big')
+    return int(final, 2).to_bytes(len(final) // 8, byteorder='little')
