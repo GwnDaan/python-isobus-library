@@ -9,3 +9,4 @@ from .vt_objects.input_field_objects import *
 from .vt_objects.output_field_objects import *
 from .vt_objects.soft_key_objects import *
 from .vt_objects.variable_objects import *
+from .vt_objects.other_objects import *
