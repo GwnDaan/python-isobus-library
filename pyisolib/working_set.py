@@ -33,21 +33,21 @@ class WorkingSet:
         self.__object_pool = ObjectPool()
         self.technical_data = TechnicalData()
         self.__listeners = []
-        self.__event_listeners = []
+        self.__function_listeners = []
 
     @property
     def state(self):
         return self.__state
 
-    def add_listener(self, listener: function, is_event_listener: bool):
+    def add_listener(self, listener: function, is_function_listener: bool):
         """The function provided will be called with a packed recieved in the canbus
         :param function listener:
             Should have the 'pgn/function' and 'data' parameter
         :param bool is_event_listener:
             Whether this is an event listener or not
         """
-        if is_event_listener:
-            self.__event_listeners.append(listener)
+        if is_function_listener:
+            self.__function_listeners.append(listener)
         else:
             self.__listeners.append(listener)
         
@@ -135,10 +135,10 @@ class WorkingSet:
                 else:
                     self.__next_state()
             else:
-                for listener in self.__event_listeners:
+                for listener in self.__function_listeners:
                     listener(function, data[1:])
         else:
-            for listener in self.__event_listeners:
+            for listener in self.__function_listeners:
                 listener(pgn, data)
                     
     def __tick(self, _):
