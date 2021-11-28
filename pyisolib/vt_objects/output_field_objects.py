@@ -54,7 +54,7 @@ class NumberObject(_OutputFieldObject):
     
     # Overrides from _OutputFieldObject
     def get_data(self):
-        data = object_to_bytes([self.number_variable, self.value, SignedInt(self.offset), self.scale, self.number_of_decimals, self.format, self.justification, len(self.macros), self.macros],
+        data = object_to_bytes([self.number_variable, self.value, SignedInt(self.offset), self.scale, self.number_of_decimals, self.use_exponential_format, self.justification, len(self.macros), self.macros],
                                # The following are the byte_length of each data value
                                2, 4, 4, 4, 1, 1, 1, 1, 2)
         return super().get_data(self._TYPE) + data
