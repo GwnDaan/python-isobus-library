@@ -1,8 +1,6 @@
 from dataclasses import dataclass
 
-from numpy.lib.arraysetops import isin
-
-from .abstract_object import DataObject
+from .vt_objects.abstract_object import DataObject
 
 def object_to_bytes(data: list, *byte_length) -> bytes:
     """Converts an complete object in the form of a list to bytes

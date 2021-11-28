@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from .abstract_object import DataObject
-from .object_utils import object_to_bytes
+from ..packet_utils import object_to_bytes
 
 from PIL import Image
 

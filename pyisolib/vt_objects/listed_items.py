@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 from .abstract_object import DataObject
-from .object_utils import SignedInt, object_to_bytes
+from ..packet_utils import SignedInt, object_to_bytes
 
 @dataclass
 class ListedObject(DataObject):

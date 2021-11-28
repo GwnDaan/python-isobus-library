@@ -186,9 +186,9 @@ class WorkingSet:
         for element in args:
             data += element if isinstance(element, bytes) else bytes([element])
        
-       # We only need to complete if len of data is less than 8.
+       # We only need to complete if len of data is less than length.
        # The transport protocol and extended transport protocol will handle it themselves
-        if len(data) < 8:
+        if len(data) < length:
             data += bytes((completer for _ in range(length - len(data))))
         
         # Disasembling the pgn
