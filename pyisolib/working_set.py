@@ -191,7 +191,7 @@ class WorkingSet:
         :param int completer:
             The value which will be appended to the data to get the length.
         """
-        self.send(PGNS.ECU_TO_VT, 7, *data, length=length, completer=completer)
+        return self.send(PGNS.ECU_TO_VT, 7, *data, length=length, completer=completer)
                     
     def send(self, pgn, priority, *args, length=8, completer=0xFF):
         """Completes and sends the args as pgn.
