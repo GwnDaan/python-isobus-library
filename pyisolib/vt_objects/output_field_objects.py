@@ -44,10 +44,10 @@ class NumberObject(_OutputFieldObject):
     
     number_variable: int # Byte 12-13
     value: int # Byte 14-17
-    offset: int # Byte 18-21, NOTE: need to convert to SignedInteger
+    offset: int # Byte 18-21,
     scale: float # Byte 22-25
     number_of_decimals: int # Byte 26
-    format: int # 27
+    use_exponential_format: bool # 27
     justification: int # 28
 
     macros:list = field(default_factory=list) # Number of macros = byte 29, repeated with starting byte 30

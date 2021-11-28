@@ -10,5 +10,6 @@ from .vt_objects.output_field_objects import *
 from .vt_objects.soft_key_objects import *
 from .vt_objects.variable_objects import *
 from .vt_objects.other_objects import *
+from .functions import *
+from .pgns import *
 from . import macro_commands
-from . import PGNS

@@ -98,9 +98,8 @@ class WorkingSet:
                 # We completed hardware state, next is memory
                 self.__next_state()
                 print("Requesting memory info")
-                self.send(PGNS.ECU_TO_VT, 7, 
-                        # Data follows below: TODO: remove static memory of 200000 and calculate it
-                        functions.TechinalData.GET_MEMORY, 0xFF, (200000).to_bytes(4, 'little'))
+                # TODO: remove static memory of 200000 and calculate it
+                self.send_to_vt(functions.TechinalData.GET_MEMORY, 0xFF, (200000).to_bytes(4, 'little'))
             
             elif function == functions.TechinalData.GET_MEMORY:
                 assert self.__state == WorkingSet.State.AWAIT_MEMORY
@@ -114,7 +113,7 @@ class WorkingSet:
                     # We completed memory state, next is soft keys
                     self.__next_state()
                     print("Requesting softkey info")
-                    self.send(PGNS.ECU_TO_VT, 7, functions.TechinalData.GET_SOFT_KEYS)            
+                    self.send_to_vt(functions.TechinalData.GET_SOFT_KEYS)            
                     
             elif function == functions.TechinalData.GET_SOFT_KEYS:
                 assert self.__state == WorkingSet.State.AWAIT_SOFT_KEYS
@@ -154,24 +153,18 @@ class WorkingSet:
         # Send the maintenance message IFF the state is the init maintenance state or above
         elif self.__state >= WorkingSet.State.INIT_MAINTENANCE:
             initializing = self.__state == WorkingSet.State.INIT_MAINTENANCE
-            self.send(PGNS.ECU_TO_VT, 7, 
-                    # Data follows below:
-                    functions.Status.MAINTENANCE, 1 if initializing else 0)
+            self.send_to_vt(functions.Status.MAINTENANCE, 1 if initializing else 0)
             
             # Get hardware and set to next state if we are currently initializing.
             if initializing:
                 self.__next_state()
                 print("Requesting hardware info")
-                self.send(PGNS.ECU_TO_VT, 7, 
-                        # Data follows below:
-                        functions.TechinalData.GET_HARDWARE)
+                self.send_to_vt(functions.TechinalData.GET_HARDWARE)
         
         # # Upload the object pool IFF the state is set
         if self.__state == WorkingSet.State.UPLOADING_POOL:
             print("Uploading pool data")
-            etp = self.send(PGNS.ECU_TO_VT, 7, 
-                      # Data follows below:
-                      functions.TransferObjectPool.TRANSFER, self.__object_pool.cached_data)
+            etp = self.send_to_vt(functions.TransferObjectPool.TRANSFER, self.__object_pool.cached_data)
 
             # Successfully uploaded the complete pool, tell the vt it is the end
             self.ca.add_timer(3, self.send_end_of_pool, etp)
@@ -184,7 +177,21 @@ class WorkingSet:
             if etp.state != ExtendedTP.State.COMPLETED:
                 return True # Request to run this again in the future
         print("Sending end of pool message")
-        self.send(PGNS.ECU_TO_VT, 7, functions.TransferObjectPool.END_OF_POOL)
+        self.send_to_vt(functions.TransferObjectPool.END_OF_POOL)
+    
+    def send_to_vt(self, *data, length=8, completer=0xFF):
+        """Completes and sends the args as pgn.
+        
+        :param int pgn:
+            The parameter group number (pgn) used
+        :param list args:
+            The data which will be sent
+        :param int length:
+            The length of the data which will be sent
+        :param int completer:
+            The value which will be appended to the data to get the length.
+        """
+        self.send(PGNS.ECU_TO_VT, 7, *data, length=length, completer=completer)
                     
     def send(self, pgn, priority, *args, length=8, completer=0xFF):
         """Completes and sends the args as pgn.

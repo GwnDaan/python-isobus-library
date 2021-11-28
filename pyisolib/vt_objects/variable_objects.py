@@ -27,7 +27,7 @@ class NumberVariable(DataObject):
     _TYPE = 21 # Byte 3
     
     object_id: int # Byte 1-2
-    value: str # Byte 4-7
+    value: int # Byte 4-7
 
     # Overrides from DataObject
     def get_data(self):
