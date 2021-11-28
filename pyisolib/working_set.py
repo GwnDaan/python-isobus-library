@@ -32,10 +32,24 @@ class WorkingSet:
         self.__state = WorkingSet.State.NONE
         self.__object_pool = ObjectPool()
         self.technical_data = TechnicalData()
+        self.__listeners = []
+        self.__event_listeners = []
 
     @property
     def state(self):
         return self.__state
+
+    def add_listener(self, listener: function, is_event_listener: bool):
+        """The function provided will be called with a packed recieved in the canbus
+        :param function listener:
+            Should have the 'pgn/function' and 'data' parameter
+        :param bool is_event_listener:
+            Whether this is an event listener or not
+        """
+        if is_event_listener:
+            self.__event_listeners.append(listener)
+        else:
+            self.__listeners.append(listener)
         
     def start(self):
         """Start the working set. The controller application must be started and the object pool set!
@@ -120,6 +134,12 @@ class WorkingSet:
                     raise RuntimeError(f"END_OF_POOL_ERROR: error {error_code}, parent_faulty_object {parent_faulty_object}, faulty_object {faulty_object}, object_pool_error {object_pool_error_code}")
                 else:
                     self.__next_state()
+            else:
+                for listener in self.__event_listeners:
+                    listener(function, data[1:])
+        else:
+            for listener in self.__event_listeners:
+                listener(pgn, data)
                     
     def __tick(self, _):
         """Check if we need to perform any actions"""
