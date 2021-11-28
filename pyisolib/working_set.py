@@ -39,9 +39,9 @@ class WorkingSet:
     def state(self):
         return self.__state
 
-    def add_listener(self, listener: function, is_function_listener: bool):
+    def add_listener(self, listener, is_function_listener: bool):
         """The function provided will be called with a packed recieved in the canbus
-        :param function listener:
+        :param listener:
             Should have the 'pgn/function' and 'data' parameter
         :param bool is_event_listener:
             Whether this is an event listener or not
