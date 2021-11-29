@@ -97,9 +97,9 @@ class WorkingSet:
                 
                 # We completed hardware state, next is memory
                 self.__next_state()
-                print("Requesting memory info")
-                # TODO: remove static memory of 200000 and calculate it
-                self.send_to_vt(functions.TechinalData.GET_MEMORY, 0xFF, (200000).to_bytes(4, 'little'))
+                mem_required = len(self.__object_pool.cached_data)
+                print(f"Requesting memory info: {mem_required} bytes")
+                self.send_to_vt(functions.TechinalData.GET_MEMORY, 0xFF, mem_required.to_bytes(4, 'little'))
             
             elif function == functions.TechinalData.GET_MEMORY:
                 assert self.__state == WorkingSet.State.AWAIT_MEMORY
