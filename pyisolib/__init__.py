@@ -1,4 +1,3 @@
-from .version import __version__
 from .working_set import WorkingSet
 from .vt_objects.graphics_objects import GraphicsObject
 from .vt_objects.listed_items import *
