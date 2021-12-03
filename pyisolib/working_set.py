@@ -140,7 +140,7 @@ class WorkingSet:
                 for listener in self.__function_listeners:
                     listener(function, data[1:])
         else:
-            for listener in self.__function_listeners:
+            for listener in self.__listeners:
                 listener(pgn, data)
                     
     def __tick(self, _):
@@ -170,7 +170,7 @@ class WorkingSet:
             print(f"Uploading pool data (using etp: {etp is not None})")
 
             # Successfully uploaded the complete pool, tell the vt it is the end
-            self.ca.add_timer(1 if etp else 15, self.send_end_of_pool, etp)
+            self.ca.add_timer(1 if etp else 5, self.send_end_of_pool, etp)
             self.__next_state()
         
         return True
