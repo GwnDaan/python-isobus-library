@@ -72,6 +72,9 @@ class WorkingSet:
         
         self.__object_pool.add_object(object)
     
+    def set_object_pool_file(self, file_name):
+        self.__object_pool.file_name = file_name
+    
     def __next_state(self):
         """Set current state to next"""
         if self.__state + 1 > WorkingSet.State.NORMAL:
