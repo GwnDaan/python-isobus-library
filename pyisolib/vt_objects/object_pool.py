@@ -21,15 +21,15 @@ class ObjectPool:
         
     def cache_data(self):
         """Get this pool as data to transmit it over ISOBUS."""
-        result = bytearray()
         if self.file_name is not None:
             # We read from the file instead
             with open(self.file_name, 'rb') as file:
                 self.cached_data = file.read()
         else:
+            result = bytearray()
             for object in self._objects:
                 result.extend(object.get_data())
-        self.cached_data = bytes(result) # Set it after we got all data as it might return errors and then is_ready will flag incorrectly
+            self.cached_data = bytes(result) # Set it after we got all data as it might return errors and then is_ready will flag incorrectly
     
     @staticmethod
     def save_pooldata_to_file(pool_class, file_name):
