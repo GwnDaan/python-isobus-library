@@ -22,7 +22,7 @@ class ObjectPool:
     def cache_data(self):
         """Get this pool as data to transmit it over ISOBUS."""
         result = bytearray()
-        if self.file is not None:
+        if self.file_name is not None:
             # We read from the file instead
             with open(self.file_name, 'rb') as file:
                 self.cached_data = file.read()
