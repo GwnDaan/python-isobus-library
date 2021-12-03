@@ -17,7 +17,7 @@ class ObjectPool:
     def is_ready(self):
         """Returns true if the pool is ready for transmission"""
         object_types = (type(object) for object in self._objects)
-        return ((WorkingSetObject in object_types and DataMaskObject in object_types) or self.file is not None) and self.cached_data is not None
+        return ((WorkingSetObject in object_types and DataMaskObject in object_types) or self.file_name is not None) and self.cached_data is not None
         
     def cache_data(self):
         """Get this pool as data to transmit it over ISOBUS."""
