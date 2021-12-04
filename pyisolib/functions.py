@@ -15,4 +15,5 @@ class Activation:
     SOFT_KEY = 0
 
 class Commands:
+    CHANGE_SIZE = 166
     CHANGE_NUMERIC_VALUE = 168

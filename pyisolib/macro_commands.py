@@ -23,3 +23,10 @@ def convert_numericvalue_cmd(object_id, new_value) -> bytes:
                          object_to_bytes([object_id, 0xFF, new_value], 
                                          # Byte-length follows below
                                          2, 1, 4))
+
+def change_size_cmd(object_id, new_width, new_height) -> bytes:
+    return __convert_cmd(Commands.CHANGE_SIZE,
+                         # Data follows below
+                         object_to_bytes([object_id, new_width, new_height],
+                                        # Byte-length follows below
+                                        2, 2, 2))
