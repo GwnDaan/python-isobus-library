@@ -19,5 +19,6 @@ setup(
     # ],
     install_requires=[
         "can-j1939>=2.0.4",
+        "pillow>=9.0.0"
     ],
 )
