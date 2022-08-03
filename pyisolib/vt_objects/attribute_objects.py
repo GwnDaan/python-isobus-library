@@ -19,7 +19,16 @@ class FontAttributes(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.font_color, self.font_size, self.font_type, self.font_style, len(self.macros), self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.font_color,
+                self.font_size,
+                self.font_type,
+                self.font_style,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -46,7 +55,15 @@ class LineAttribute(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.line_color, self.line_width, self.line_art, len(self.macros), self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.line_color,
+                self.line_width,
+                self.line_art,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -72,7 +89,15 @@ class FillAttribute(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.fill_type, self.fill_color, self.fill_pattern, len(self.macros), self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.fill_type,
+                self.fill_color,
+                self.fill_pattern,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

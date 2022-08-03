@@ -16,7 +16,15 @@ class _OutputFieldObject(DataObject):
     # Overrides from DataObject
     def get_data(self, type):
         return object_to_bytes(
-            [self.object_id, type, self.width, self.height, self.background_color, self.font_attributes, self.options],
+            [
+                self.object_id,
+                type,
+                self.width,
+                self.height,
+                self.background_color,
+                self.font_attributes,
+                self.options,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -42,7 +50,14 @@ class StringObject(_OutputFieldObject):
     # Overrides from _OutputFieldObject
     def get_data(self):
         data = object_to_bytes(
-            [self.string_variable, self.justification, self.length, self.value, len(self.macros), self.macros],
+            [
+                self.string_variable,
+                self.justification,
+                self.length,
+                self.value,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -74,7 +89,17 @@ class NumberObject(_OutputFieldObject):
     # Overrides from _OutputFieldObject
     def get_data(self):
         data = object_to_bytes(
-            [self.number_variable, self.value, SignedInt(self.offset), self.scale, self.number_of_decimals, self.use_exponential_format, self.justification, len(self.macros), self.macros],
+            [
+                self.number_variable,
+                self.value,
+                SignedInt(self.offset),
+                self.scale,
+                self.number_of_decimals,
+                self.use_exponential_format,
+                self.justification,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             4,

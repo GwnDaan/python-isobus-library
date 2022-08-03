@@ -17,7 +17,16 @@ class SoftKeyObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.background_color, self.key_code, len(self.objects), len(self.macros), self.objects, self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.background_color,
+                self.key_code,
+                len(self.objects),
+                len(self.macros),
+                self.objects,
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

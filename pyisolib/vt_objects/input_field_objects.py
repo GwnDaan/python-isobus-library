@@ -21,7 +21,18 @@ class BoolInputObject(DataObject):
     # Overrides from DataObject
     def get_data(self, type):
         return object_to_bytes(
-            [self.object_id, type, self.background_color, self.width, self.foreground_color, self.bool_variable, self.value, self.enabled, len(self.macros), self.macros],
+            [
+                self.object_id,
+                type,
+                self.background_color,
+                self.width,
+                self.foreground_color,
+                self.bool_variable,
+                self.value,
+                self.enabled,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -63,7 +74,15 @@ class NumberInputObject(DataObject):
     # Overrides from _InputFieldObject
     def get_data(self):
         part1 = object_to_bytes(
-            [self.object_id, self._TYPE, self.width, self.height, self.background_color, self.font_attributes, self.options],
+            [
+                self.object_id,
+                self._TYPE,
+                self.width,
+                self.height,
+                self.background_color,
+                self.font_attributes,
+                self.options,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

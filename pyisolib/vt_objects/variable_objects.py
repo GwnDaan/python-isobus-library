@@ -20,7 +20,12 @@ class StringVariable(DataObject):
             raise ValueError(f"The length field ({self.length} is not equal to the lenght of the value", len(value))
 
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.length, self.value],
+            [
+                self.object_id,
+                self._TYPE,
+                self.length,
+                self.value,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -39,7 +44,11 @@ class NumberVariable(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.value],
+            [
+                self.object_id,
+                self._TYPE,
+                self.value,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -56,7 +65,11 @@ class BoolVariable(NumberVariable):
     # Overrides from NumberVariable
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, 1 if self.value else 0],
+            [
+                self.object_id,
+                self._TYPE,
+                1 if self.value else 0,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

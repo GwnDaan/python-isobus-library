@@ -18,7 +18,16 @@ class LineObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.line_attributes, self.width, self.height, self.line_direction, len(self.macros), self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.line_attributes,
+                self.width,
+                self.height,
+                self.line_direction,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -46,7 +55,17 @@ class RectangleObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.line_attributes, self.width, self.height, self.line_suppresion, self.fill_attributes, len(self.macros), self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.line_attributes,
+                self.width,
+                self.height,
+                self.line_suppresion,
+                self.fill_attributes,
+                len(self.macros),
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

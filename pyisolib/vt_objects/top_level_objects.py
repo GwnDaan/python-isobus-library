@@ -61,7 +61,16 @@ class DataMaskObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.background_color, self.soft_key_mask, len(self.objects), len(self.macros), self.objects, self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.background_color,
+                self.soft_key_mask,
+                len(self.objects),
+                len(self.macros),
+                self.objects,
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -88,7 +97,15 @@ class SoftKeyMaskObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.background_color, len(self.objects), len(self.macros), self.objects, self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.background_color,
+                len(self.objects),
+                len(self.macros),
+                self.objects,
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -116,7 +133,18 @@ class AlarmMaskObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.background_color, self.soft_key_mask, self.priorty, self.acoustic_signal, len(self.objects), len(self.macros), self.objects, self.macros],
+            [
+                self.object_id,
+                self._TYPE,
+                self.background_color,
+                self.soft_key_mask,
+                self.priorty,
+                self.acoustic_signal,
+                len(self.objects),
+                len(self.macros),
+                self.objects,
+                self.macros,
+            ],
             # The following are the byte_length of each data value
             2,
             1,

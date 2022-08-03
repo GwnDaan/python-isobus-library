@@ -62,7 +62,11 @@ class PointerObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, self.value],
+            [
+                self.object_id,
+                self._TYPE,
+                self.value,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
@@ -80,7 +84,12 @@ class MacroObject(DataObject):
     # Overrides from DataObject
     def get_data(self):
         return object_to_bytes(
-            [self.object_id, self._TYPE, len(self.command), self.command],
+            [
+                self.object_id,
+                self._TYPE,
+                len(self.command),
+                self.command,
+            ],
             # The following are the byte_length of each data value
             2,
             1,
