@@ -14,30 +14,48 @@ def __convert_cmd(*args, completer=0xFF) -> bytes:
 
     return data
 
+
 # ----------------------
 # All the different cmds
 # ----------------------
 
 
 def convert_numericvalue_cmd(object_id, new_value) -> bytes:
-    return __convert_cmd(Commands.CHANGE_NUMERIC_VALUE,
-                         # Data follows below
-                         object_to_bytes([object_id, 0xFF, new_value],
-                                         # Byte-length follows below
-                                         2, 1, 4))
+    return __convert_cmd(
+        Commands.CHANGE_NUMERIC_VALUE,
+        # Data follows below
+        object_to_bytes(
+            [object_id, 0xFF, new_value],
+            # Byte-length follows below
+            2,
+            1,
+            4,
+        ),
+    )
 
 
 def change_size_cmd(object_id, new_width, new_height) -> bytes:
-    return __convert_cmd(Commands.CHANGE_SIZE,
-                         # Data follows below
-                         object_to_bytes([object_id, new_width, new_height],
-                                         # Byte-length follows below
-                                         2, 2, 2))
+    return __convert_cmd(
+        Commands.CHANGE_SIZE,
+        # Data follows below
+        object_to_bytes(
+            [object_id, new_width, new_height],
+            # Byte-length follows below
+            2,
+            2,
+            2,
+        ),
+    )
 
 
 def change_active_mask_cmd(object_id, new_mask_id) -> bytes:
-    return __convert_cmd(Commands.CHANGE_ACTIVE_MASK,
-                         # Data follows below
-                         object_to_bytes([object_id, new_mask_id],
-                                         # Byte-length follows below
-                                         2, 2))
+    return __convert_cmd(
+        Commands.CHANGE_ACTIVE_MASK,
+        # Data follows below
+        object_to_bytes(
+            [object_id, new_mask_id],
+            # Byte-length follows below
+            2,
+            2,
+        ),
+    )

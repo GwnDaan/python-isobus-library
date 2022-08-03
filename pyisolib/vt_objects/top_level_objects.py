@@ -19,9 +19,33 @@ class WorkingSetObject(DataObject):
 
     # Overrides from DataObject
     def get_data(self):
-        return object_to_bytes([self.object_id, self._TYPE, self.background_color, self.selectable, self.active_mask_object_id, len(self.objects), len(self.macros), len(self.languages), self.objects, self.macros, self.languages],
-                               # The following are the byte_length of each data value
-                               2, 1, 1, 1, 2, 1, 1, 1, 6, 2, 2)
+        return object_to_bytes(
+            [
+                self.object_id,
+                self._TYPE,
+                self.background_color,
+                self.selectable,
+                self.active_mask_object_id,
+                len(self.objects),
+                len(self.macros),
+                len(self.languages),
+                self.objects,
+                self.macros,
+                self.languages,
+            ],
+            # The following are the byte_length of each data value
+            2,
+            1,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            6,
+            2,
+            2,
+        )
 
 
 @dataclass
@@ -36,14 +60,23 @@ class DataMaskObject(DataObject):
 
     # Overrides from DataObject
     def get_data(self):
-        return object_to_bytes([self.object_id, self._TYPE, self.background_color, self.soft_key_mask, len(self.objects), len(self.macros), self.objects, self.macros],
-                               # The following are the byte_length of each data value
-                               2, 1, 1, 2, 1, 1, 6, 2)
+        return object_to_bytes(
+            [self.object_id, self._TYPE, self.background_color, self.soft_key_mask, len(self.objects), len(self.macros), self.objects, self.macros],
+            # The following are the byte_length of each data value
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            6,
+            2,
+        )
 
 
 @dataclass
 class SoftKeyMaskObject(DataObject):
-    '''NOTE: objects field doesn't take the normal ListedObject class but instead just integers referring to the object id'''
+    """NOTE: objects field doesn't take the normal ListedObject class but instead just integers referring to the object id"""
 
     _TYPE = 4  # Byte 3
 
@@ -54,9 +87,17 @@ class SoftKeyMaskObject(DataObject):
 
     # Overrides from DataObject
     def get_data(self):
-        return object_to_bytes([self.object_id, self._TYPE, self.background_color, len(self.objects), len(self.macros), self.objects, self.macros],
-                               # The following are the byte_length of each data value
-                               2, 1, 1, 1, 1, 2, 2)
+        return object_to_bytes(
+            [self.object_id, self._TYPE, self.background_color, len(self.objects), len(self.macros), self.objects, self.macros],
+            # The following are the byte_length of each data value
+            2,
+            1,
+            1,
+            1,
+            1,
+            2,
+            2,
+        )
 
 
 @dataclass
@@ -74,6 +115,17 @@ class AlarmMaskObject(DataObject):
 
     # Overrides from DataObject
     def get_data(self):
-        return object_to_bytes([self.object_id, self._TYPE, self.background_color, self.soft_key_mask, self.priorty, self.acoustic_signal, len(self.objects), len(self.macros), self.objects, self.macros],
-                               # The following are the byte_length of each data value
-                               2, 1, 1, 2, 1, 1, 1, 1, 6, 2)
+        return object_to_bytes(
+            [self.object_id, self._TYPE, self.background_color, self.soft_key_mask, self.priorty, self.acoustic_signal, len(self.objects), len(self.macros), self.objects, self.macros],
+            # The following are the byte_length of each data value
+            2,
+            1,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            6,
+            2,
+        )
