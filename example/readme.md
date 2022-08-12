@@ -10,7 +10,7 @@ The parts used for this build are:
 - Raspberry Pi Zero 2 W
 - [CAN hat for Raspberry Pi](https://www.waveshare.com/rs485-can-hat.htm)
 
-The Raspberry Pi is mounted on the Fertilizer spreader, and connected via the CAN hat to the canbus via the corrosponding [connector](https://www.fendt.com/nl/images/5d4d38907b260604b14e4856_1565341841_web_nl-NL.png) on the back of the tractor. Note that there could be multiple connectors for ISOBUS in- and outside the cab of the tractor, so choose what is most convienent for you.
+The Raspberry Pi is mounted on the Fertilizer spreader, and connected via the CAN hat to the canbus via the corrosponding [connector](https://user-images.githubusercontent.com/29043784/184420066-8d0ee738-3c74-482c-a8d3-33697cc56a9f.png) on the back of the tractor. Note that there could be multiple connectors for ISOBUS in- and outside the cab of the tractor, so choose what is most convienent for you.
 
 # Software
 
